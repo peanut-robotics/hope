@@ -1021,6 +1021,8 @@ void PlaneSegmentRT::setFeatures(float z_in, PointCloudMono::Ptr cluster)
   pose_array_.header.frame_id = base_frame_;
   pose_array_.polygon = polygon_points;
   pose_array_.header.stamp = ros::Time::now();
+  ROS_INFO("Publishing data onto pose_array");
+  ROS_ERROR("Publishing data onto pose_array");
   pose_pub_.publish(pose_array_);
 }
 
