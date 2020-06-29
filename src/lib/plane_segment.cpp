@@ -740,7 +740,7 @@ PlaneSegmentRT::PlaneSegmentRT(float th_xy, float th_z, ros::NodeHandle nh, stri
   extract_on_top_server_ = nh_.advertiseService("extract_object_on_top", &PlaneSegmentRT::extractOnTopCallback, this);
 
   // Detect table surface as an obstacle
-  plane_cloud_puber_ = nh_.advertise<sensor_msgs::PointCloud2>("plane_points", 1);
+  plane_cloud_puber_ = nh_.advertise<sensor_msgs::PointCloud2>("plane_points", 100);
   max_plane_puber_ = nh_.advertise<sensor_msgs::PointCloud2>("max_plane", 1);
   max_contour_puber_ = nh_.advertise<sensor_msgs::PointCloud2>("max_contour", 1);
   on_plane_obj_puber_ = nh_.advertise<geometry_msgs::PoseArray>("obj_poses", 1, true);

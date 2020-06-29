@@ -21,8 +21,8 @@ int main(int argc, char **argv)
 
   float xy_resolution = 0.05; // In meter
   float z_resolution = 0.02; // In meter
-  string base_frame = "base_link"; // plane reference frame
-  string cloud_topic = "/point_cloud";
+  string base_frame = "mobile_base_link"; // plane reference frame
+  string cloud_topic = "/oil/perception/head_camera/cloud";
 
   // Servo's max angle to rotate
   pnh.getParam("base_frame", base_frame);
