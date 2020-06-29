@@ -4,8 +4,8 @@
     <param name="/use_sim_time" value="true" />
 
     <arg name="ns" default="vision"/>
-    <arg name="base_frame" default="base_link"/>
-    <arg name="cloud_topic" default="/point_cloud"/>
+    <arg name="base_frame" default="mobile_base_link"/>
+    <arg name="cloud_topic" default="/oil/perception/head_camera/cloud"/>
 
     <node ns="$(arg ns)" name="hope_ros" pkg="hope" type="hope_ros" respawn="false">
         <!-- No slash on the front -->

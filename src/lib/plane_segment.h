@@ -280,6 +280,7 @@ private:
   vector<vector<float> > global_coeff_temp_;
   vector<int> global_id_temp_;
 
+  geometry_msgs::PolygonStamped pose_array_;
   /// ROS stuff
   ros::NodeHandle nh_;
   dynamic_reconfigure::Server<hope::hopeConfig> server_;
@@ -295,6 +296,7 @@ private:
   ros::Publisher max_plane_puber_;
   ros::Publisher max_contour_puber_;
   ros::Publisher on_plane_obj_puber_;
+  ros::Publisher pose_pub_;
 
   void getSourceCloud();
 

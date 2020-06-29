@@ -1,5 +1,6 @@
 ﻿#include "plane_segment.h"
 #include <tf2/LinearMath/Quaternion.h>
+#include <geometry_msgs/PolygonStamped.h>
 
 #include <utility>
 
@@ -725,6 +726,8 @@ PlaneSegmentRT::PlaneSegmentRT(float th_xy, float th_z, ros::NodeHandle nh, stri
   // For storing max hull id and area
   global_size_temp_ = 0;
 
+  pose_pub_ = nh_.advertise<geometry_msgs::PolygonStamped>("pose_array", 100);
+
   // Register the callback if using real point cloud data
   source_suber = nh_.subscribe<sensor_msgs::PointCloud2>(cloud_topic, 1,
                                                          &PlaneSegmentRT::cloudCallback, this);
@@ -996,6 +999,29 @@ void PlaneSegmentRT::setFeatures(float z_in, PointCloudMono::Ptr cluster)
   feature.push_back(maxPt.x); // cluster max x
   feature.push_back(maxPt.y); // cluster max y
   plane_coeff_list_.push_back(feature);
+  geometry_msgs::Polygon polygon_points;
+  geometry_msgs::Point32 min_pts_bottom, min_pts_top, max_pts_bottom, max_pts_top;
+  min_pts_bottom.x = minPt.x;
+  min_pts_bottom.y = minPt.y;
+  min_pts_bottom.z = z_in;
+  min_pts_top.x = minPt.x;
+  min_pts_top.y = maxPt.y;
+  min_pts_top.z = z_in;
+  max_pts_bottom.x = maxPt.x;
+  max_pts_bottom.y = minPt.y;
+  max_pts_bottom.z = z_in;
+  max_pts_top.x = maxPt.x;
+  max_pts_top.y = maxPt.y;
+  max_pts_top.z = z_in;
+  polygon_points.points.push_back(min_pts_bottom);
+  polygon_points.points.push_back(min_pts_top);
+  polygon_points.points.push_back(max_pts_top);
+  polygon_points.points.push_back(max_pts_bottom);
+  //polygon_points.points.push_back(min_pts_bottom);
+  pose_array_.header.frame_id = base_frame_;
+  pose_array_.polygon = polygon_points;
+  pose_array_.header.stamp = ros::Time::now();
+  pose_pub_.publish(pose_array_);
 }
 
 void PlaneSegmentRT::computeHull(PointCloudMono::Ptr cluster_2d, PointCloudMono::Ptr &cluster_hull) {
