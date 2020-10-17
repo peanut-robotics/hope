@@ -270,6 +270,10 @@ void PlaneSegment::extractPlaneForEachZ(PointCloudMono::Ptr cloud_norm_fit)
 
 void PlaneSegment::getPlane(size_t id, float z_in, PointCloudMono::Ptr &cloud_norm_fit_mono)
 {
+  if (z_in < z_min_ || z_in > z_max_) {
+    ROS_DEBUG("Plane ignored because of not within required height range");
+    return;
+  }
   pcl::ModelCoefficients::Ptr cluster_coeff(new pcl::ModelCoefficients);
   // Plane function: ax + by + cz + d = 0, here coeff[3] = d = -cz
   cluster_coeff->values.push_back(0.0);
@@ -292,7 +296,7 @@ void PlaneSegment::getPlane(size_t id, float z_in, PointCloudMono::Ptr &cloud_no
   // push it and corresponding projected points into resulting vectors
   plane_results_.push_back(cluster_2d_rgb);
   plane_points_.push_back(cluster_near_z);
-  
+
   computeHull(cluster_near_z);
   setFeatures(z_in, cluster_near_z);
   
