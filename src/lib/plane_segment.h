@@ -84,6 +84,7 @@ struct Params {
   double area_max = 0.0;
   double xy_resolution = 0.05;
   double z_resolution = 0.02;
+  double norm_threshold = 0.2;
   bool viz = true;
   std::string base_frame = "mobile_base_link";
   std::string cloud_topic = "/oil/perception/head_camera/cloud";
@@ -172,6 +173,7 @@ private:
   
   // Source point cloud
   PointCloud::Ptr src_rgb_cloud_;
+  PointCloud::Ptr src_transformed_z_;
   PointCloudMono::Ptr src_mono_cloud_;
   ros::Time last_cloud_time_; 
   ros::Time last_cloud_msg_time_;

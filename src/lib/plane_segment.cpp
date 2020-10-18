@@ -37,6 +37,7 @@ PlaneSegment::PlaneSegment(Params params, ros::NodeHandle nh) :
   viz_(params.viz),
   src_mono_cloud_(new PointCloudMono),
   src_rgb_cloud_(new PointCloud),
+  src_transformed_z_(new PointCloud),
   cloud_norm_fit_mono_(new PointCloudMono),
   cloud_norm_fit_(new NormalCloud),
   src_sp_mono_(new PointCloudMono),
@@ -54,7 +55,7 @@ PlaneSegment::PlaneSegment(Params params, ros::NodeHandle nh) :
   th_z_rsl_ = params.z_resolution;
   th_theta_ = th_z_rsl_ / th_grid_rsl_;
   th_angle_ = atan(th_theta_);
-  th_norm_ = sqrt(1 / (1 + 2 * pow(th_theta_, 2)));
+  th_norm_ = params.norm_threshold;
   
   // For store max hull id and area
   global_size_temp_ = 0;
@@ -231,7 +232,7 @@ void PlaneSegment::getMeanZofEachCluster(PointCloudMono::Ptr cloud_norm_fit_mono
       }
       
       float part_mean_z = utl_->getCloudMeanZ(cloud_fit_part);
-      //cout << "Cluster has " << idx_seed->indices.size() << " points at z: " << part_mean_z << endl;
+      cout << "Cluster has " << idx_seed->indices.size() << " points at z: " << part_mean_z << endl;
       plane_z_values_.push_back(part_mean_z);
       k++;
     }
@@ -264,6 +265,7 @@ void PlaneSegment::extractPlaneForEachZ(PointCloudMono::Ptr cloud_norm_fit)
   for (vector<float>::iterator cit = plane_z_values_.begin();
        cit != plane_z_values_.end(); cit++) {
     getPlane(id, *cit, cloud_norm_fit);
+    cout << "Getting plane #: " << id << endl;
     id++;
   }
 }
@@ -842,7 +844,10 @@ void PlaneSegment::cloudCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
     tf_->doTransform(temp, src_rgb_cloud_, roll_, pitch_, yaw_);
   }
 
-  utl_->pointTypeTransfer(src_rgb_cloud_, src_mono_cloud_);
+  utl_->getCloudByZ(src_rgb_cloud_, src_z_inliers_, src_transformed_z_,
+                    float(z_min_), float(z_max_));
+
+  utl_->pointTypeTransfer(src_transformed_z_, src_mono_cloud_);
 
   last_cloud_time_ = ros::Time::now();
   last_cloud_msg_time_ = msg->header.stamp;
