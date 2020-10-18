@@ -833,15 +833,15 @@ void PlaneSegment::cloudCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
   pcl_conversions::toPCL(*msg, pcl_pc2);
   pcl::fromPCLPointCloud2(pcl_pc2, *src_temp);
 
-  utl_->getCloudByZ(src_temp, src_z_inliers_, temp,
-                    th_min_depth_, th_max_depth_);
+  // utl_->getCloudByZ(src_temp, src_z_inliers_, temp,
+  //                   th_min_depth_, th_max_depth_);
 
   if (type_ == REAL) {
     tf_->getTransform(base_frame_, msg->header.frame_id);
-    tf_->doTransform(temp, src_rgb_cloud_);
+    tf_->doTransform(src_temp, src_rgb_cloud_);
   }
   else {
-    tf_->doTransform(temp, src_rgb_cloud_, roll_, pitch_, yaw_);
+    tf_->doTransform(src_temp, src_rgb_cloud_, roll_, pitch_, yaw_);
   }
 
   utl_->getCloudByZ(src_rgb_cloud_, src_z_inliers_, src_transformed_z_,
@@ -898,7 +898,7 @@ bool PlaneSegment::getSourceCloud()
 
 void PlaneSegment::computeNormalAndFilter()
 {
-  utl_->estimateNorm(src_sp_mono_, src_normals_, 1.01 * th_grid_rsl_);
+  utl_->estimateNorm(src_sp_mono_, src_normals_, 10.01 * th_grid_rsl_);
   utl_->getCloudByNorm(src_normals_, idx_norm_fit_, th_norm_);
 
   if (idx_norm_fit_->indices.empty()) return;
