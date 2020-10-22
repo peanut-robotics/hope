@@ -10,9 +10,9 @@ blob_properties:
   max_surface_area: 5.5 # The maximum surface area of the complete polygon we are interested in
 
 plane_segment:
-  xy_resolution: 0.05 # Nearest neighbor cluster growing resolution in xy plane for plane detection
-  z_resolution: 0.01 # Nearest neighbor cluster growing resolution in z axis for plane detection
-  norm_threshold: 0.2 # in radians
+  xy_resolution: 0.05 # Nearest neighbor cluster growing resolution in xy plane for plane detection. Used to define a radius in estimateNormals.
+  z_resolution: 0.03 # Nearest neighbor cluster growing resolution in z axis for plane detection
+  norm_threshold: 0.05 # in radians. 
 
 pointcloud:
   base_frame: "map"
