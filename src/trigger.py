@@ -37,7 +37,7 @@ class HopeTrigger(object):
 
     def trigger_cb(self, req):
         try:
-            self.cloud = rospy.wait_for_message(self.camera_source_topic_name, PointCloud2, timeout=2.0)
+            self.cloud = rospy.wait_for_message(self.camera_source_topic_name, PointCloud2, timeout=10.0)
         except rospy.exceptions.ROSException:
             nutlog.error("Could not get point cloud msg on topic {}".format(self.camera_source_topic_name))
             return TriggerResponse(success=False)
