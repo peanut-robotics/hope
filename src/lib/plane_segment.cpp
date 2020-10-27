@@ -839,7 +839,7 @@ void PlaneSegment::cloudCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
   //                   th_min_depth_, th_max_depth_);
 
   if (type_ == REAL) {
-    tf_->getTransform(base_frame_, msg->header.frame_id);
+    tf_->getTransform(base_frame_, msg->header.frame_id, msg->header.stamp);
     tf_->doTransform(src_temp, src_rgb_cloud_);
   }
   else {
