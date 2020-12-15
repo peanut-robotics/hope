@@ -17,6 +17,7 @@ float th_z_rsl_ = 0.002; // Resolution in Z direction
 float th_theta_;
 float th_angle_;
 float th_norm_;
+float res_scale_;
 
 // Depth threshold for filtering source cloud, only used for real data
 float th_min_depth_ = 0.3;
@@ -25,6 +26,7 @@ float th_max_depth_ = 8.0;
 bool cal_hull_ = false;
 bool show_cluster_ = false;
 bool show_egi_ = false;
+bool down_sample_ = true;
 
 
 PlaneSegment::PlaneSegment(Params params, ros::NodeHandle nh) :
@@ -56,6 +58,8 @@ PlaneSegment::PlaneSegment(Params params, ros::NodeHandle nh) :
   th_theta_ = th_z_rsl_ / th_grid_rsl_;
   th_angle_ = atan(th_theta_);
   th_norm_ = params.norm_threshold;
+  res_scale_ = params.res_scale;
+  down_sample_ = params.down_sample;
   
   // For store max hull id and area
   global_size_temp_ = 0;
@@ -112,7 +116,7 @@ void PlaneSegment::getHorizontalPlanes()
   //pcl::io::savePCDFile("~/src.pcd", *src_rgb_cloud_);
   
   // Down sampling
-  if (th_grid_rsl_ > 0 && th_z_rsl_ > 0) {
+  if (down_sample_ && th_grid_rsl_ > 0 && th_z_rsl_ > 0) {
     utl_->downSampling(src_mono_cloud_, src_sp_mono_, th_grid_rsl_, th_z_rsl_);
     utl_->downSampling(src_rgb_cloud_, src_sp_rgb_, th_grid_rsl_, th_z_rsl_);
   }
@@ -121,7 +125,7 @@ void PlaneSegment::getHorizontalPlanes()
     src_sp_rgb_ = src_rgb_cloud_;
   }
   //visualizeProcess(src_sp_rgb_);
-  ROS_DEBUG_STREAM("Point number after down sampling: #" << src_sp_rgb_->points.size());
+  ROS_INFO_STREAM("Point number after down sampling: #" << src_sp_rgb_->points.size());
 
   if (src_sp_mono_->points.empty()) {
     ROS_WARN("PlaneSegment: Source cloud is empty.");
@@ -900,7 +904,7 @@ bool PlaneSegment::getSourceCloud()
 
 void PlaneSegment::computeNormalAndFilter()
 {
-  utl_->estimateNorm(src_sp_mono_, src_normals_, 10.01 * th_grid_rsl_);
+  utl_->estimateNorm(src_sp_mono_, src_normals_, res_scale_ * th_grid_rsl_);
   utl_->getCloudByNorm(src_normals_, idx_norm_fit_, th_norm_);
 
   if (idx_norm_fit_->indices.empty()) return;

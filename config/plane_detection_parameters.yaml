@@ -1,6 +1,6 @@
 # YAML parameters file for plane detection algorithm
 ground_clearance:
-  min_height: 0.25 # Ground clearance minimum in meters
+  min_height: 0.6 # Ground clearance minimum in meters
   max_height: 1.6 # ground clearance maximum in meters
 
 blob_properties:
@@ -10,13 +10,20 @@ blob_properties:
   max_surface_area: 5.5 # The maximum surface area of the complete polygon we are interested in
 
 plane_segment:
-  xy_resolution: 0.05 # Nearest neighbor cluster growing resolution in xy plane for plane detection. Used to define a radius in estimateNormals.
-  z_resolution: 0.03 # Nearest neighbor cluster growing resolution in z axis for plane detection
-  norm_threshold: 0.05 # in radians. 
+  xy_resolution: 0.01 # Nearest neighbor cluster growing resolution in xy plane for plane detection. Used to define a radius in estimateNormals.
+  z_resolution: 0.0125 # Nearest neighbor cluster growing resolution in z axis for plane detection
+  norm_threshold: 0.1 # in radians.
+  res_scale: 10.01
+  # hope defaults: 
+  # xy_resolution: 0.015
+  # z_resolution: 0.002
+  # norm_threshold: 0.982682673
+  # res_scale: 1.01
+  down_sample: false
 
 pointcloud:
   base_frame: "map"
   topic_name: "/oil/perception/head_camera/triggered_cloud"  # Topic that hope listens to for cloud data. This is the topic trigger.py publishes to
-  camera_source_topic_name: "/oil/perception/head_camera/sync_filtered_cloud" # Topic onto which cloud filtered data from the camera is published to 
+  camera_source_topic_name: "/oil/perception/head_camera/filtered_cloud" # Topic onto which cloud filtered data from the camera is published to 
 
-viz: false 
+viz: false

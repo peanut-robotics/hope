@@ -84,8 +84,10 @@ struct Params {
   double area_max = 0.0;
   double xy_resolution = 0.05;
   double z_resolution = 0.02;
+  double res_scale = 1.01;
   double norm_threshold = 0.2;
   bool viz = true;
+  bool down_sample = true;
   std::string base_frame = "mobile_base_link";
   std::string cloud_topic = "/oil/perception/head_camera/cloud";
 };

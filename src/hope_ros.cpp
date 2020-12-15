@@ -82,6 +82,8 @@ int main(int argc, char **argv)
   nh.getParam("blob_properties/max_surface_area", params.area_max);
   nh.getParam("plane_segment/xy_resolution", params.xy_resolution);
   nh.getParam("plane_segment/z_resolution", params.z_resolution);
+  nh.getParam("plane_segment/down_sample", params.down_sample);
+  nh.getParam("plane_segment/res_scale", params.res_scale);
   nh.getParam("pointcloud/base_frame", params.base_frame);
   nh.getParam("pointcloud/topic_name", params.cloud_topic);
   nh.getParam("viz", params.viz);
